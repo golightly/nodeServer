@@ -121,6 +121,10 @@ function mainPost(request, response) {
         response.json("0: not a valid number");
         return;
     }
+    if(request.body.data.name.length > 17) {
+        response.json("o: name invalid length");
+        return;
+    }
     fileGate = true;
     data.length = null;
     data.array = [];
