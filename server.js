@@ -180,8 +180,9 @@ app.post('/autoCrawlerHighScores', (request, response) => {
         index: 12,
         name: request.body.data.name,
         number: request.body.data.number,
+    }).then(data => {
+        response.json("1: successful database test");
     });
-    response.json("1: successful database test");
 });
 
 app.get('/autoCrawlerHighScores', (request, response) => {
