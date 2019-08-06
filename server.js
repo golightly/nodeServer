@@ -8,6 +8,15 @@ app.use(cors());
 const fs = require('fs');
 const Filter = require('bad-words');
 var filter = new Filter();
+const knex = require('knex');
+
+const database = knex({
+    client: 'pg',
+    connection: {
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+    },
+});
 
 //gates access to file to one user at a time to prevent data loss
 var fileGate = false;
@@ -155,7 +164,7 @@ function gate(executionType, request, response) {
 }
 
 app.post('/autoCrawlerHighScores', (request, response) => {
-    if(typeof request.body.data === 'undefined') {
+    /*if(typeof request.body.data === 'undefined') {
         response.json("0: improper request type");
         return;
     }
@@ -166,11 +175,20 @@ app.post('/autoCrawlerHighScores', (request, response) => {
         response.json("0: improper request type");
         return;
     }
-    gate("post", request, response);
+    gate("post", request, response);*/
+    database('autocrawlerhighscore').insert({
+        index: 12,
+        name: request.body.data.name,
+        number: request.body.data.number,
+    });
+    response.json("1: successful database test");
 });
 
 app.get('/autoCrawlerHighScores', (request, response) => {
-    gate("get", request, response);
+    //gate("get", request, response);
+    database.select("*").from("autocrawlerhighscore").then(data => {
+        response.json((data));
+    });
 });
 
 app.listen(process.env.PORT);
