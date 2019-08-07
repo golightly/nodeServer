@@ -155,7 +155,7 @@ function gate(executionType, request, response) {
 }
 
 app.post('/autoCrawlerHighScores', (request, response) => {
-    /*if(typeof request.body.data === 'undefined') {
+    if(typeof request.body.data === 'undefined') {
         response.json("0: improper request type");
         return;
     }
@@ -166,14 +166,14 @@ app.post('/autoCrawlerHighScores', (request, response) => {
         response.json("0: improper request type");
         return;
     }
-    gate("post", request, response);*/
-    database('autocrawlerhighscore').insert({
+    gate("post", request, response);
+    /*database('autocrawlerhighscore').insert({
         index: 12,
         name: request.body.data.name,
         number: request.body.data.number,
     }).then(data => {
         response.json("1: successful database test");
-    });
+    });*/
 });
 
 app.get('/autoCrawlerHighScores', (request, response) => {
