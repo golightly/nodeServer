@@ -105,18 +105,9 @@ function writePost(fileContent, response) {
             number: data.array[a].number,
         });
     }
-    database('autocrawlerhighscore').insert(fileContent)
-    //element 0 of arguments is fileContent for some reason
-    fs.writeFile("data.txt", fileContent, (error, response) => {
-        if(error) {
-            console.log(error);
-            arguments[1].json("0: error writing to file");
-            fileGate = false;
-        }
-        else {
-            arguments[1].json("1: successful post");
-            fileGate = false;
-        }
+    database('autocrawlerhighscore').insert(fileContent).then(() => {
+        response.json("1: successful post");
+        fileGate = false;
     });
 }
 
@@ -134,11 +125,9 @@ function mainPost(request, response) {
     data.array = [];
     database.select('*').from('autocrawlerhighscore').then((fileContent) => {
         database('autocrawlerhighscore').del().then(() => {
-            response.json("1:testing delete");
-            fileGate = false;
+            processPost(fileContent, request); //fileContent into data, uses request
+            writePost(fileContent, response); //also sends response
         });
-        //processPost(fileContent, arguments[0]); //fileContent into data, uses request
-        //writePost(fileContent, arguments[1]); //also sends response
     });
 }
 
