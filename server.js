@@ -60,10 +60,10 @@ function mainGet(response) {
     fileGate = true;
     data.length = null;
     data.array = [];
-    database.select("*").from("autocrawlerhighscore").then(databaseOuput => {
+    database.select("*").from("autocrawlerhighscore").then(databaseOutput => {
         data.length = databaseOutput.length;
         for(let a = 0; a < data.length; ++a) {
-            data.array.push(new Data(databaseOutput[a].name, databaseOuput[a].number));
+            data.array.push(new Data(databaseOutput[a].name, databaseOutput[a].number));
         }
         response.json({data});
         fileGate = false;
