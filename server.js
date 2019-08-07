@@ -132,7 +132,7 @@ function mainPost(request, response) {
     fileGate = true;
     data.length = null;
     data.array = [];
-    database.select('*').from('autocrawlerhighscores').then((fileContent, request, response) => {
+    database.select('*').from('autocrawlerhighscore').then((fileContent, request, response) => {
         database('autocrawlerhighscore').del().then((request, response) => {
             response.json("1:testing delete");
             fileGate = false;
