@@ -132,9 +132,9 @@ function mainPost(request, response) {
     fileGate = true;
     data.length = null;
     data.array = [];
-    database.select('*').from('autocrawlerhighscore').then((fileContent, request, response) => {
-        database('autocrawlerhighscore').del().then((request, response) => {
-            argument[1].json("1:testing delete");
+    database.select('*').from('autocrawlerhighscore').then((fileContent) => {
+        database('autocrawlerhighscore').del().then(() => {
+            response.json("1:testing delete");
             fileGate = false;
         });
         //processPost(fileContent, arguments[0]); //fileContent into data, uses request
