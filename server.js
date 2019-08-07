@@ -45,8 +45,8 @@ var data = {
 
 var dataNameTemp = null;
 
-function processGet(fileContent, response) {
-    data.length = fileContent[0];
+/*function processGet(fileContent, response) {
+    data.length = fileContent.length;
     dataNameTemp = null;
     //populate data with data from file
     for(let a = 1; a < (data.length * 2); a+=2) {
@@ -54,33 +54,26 @@ function processGet(fileContent, response) {
         data.array.push(new Data(dataNameTemp, fileContent[a+1]));
     }
     response.json({data});
-    fileGate = false;
-}
+}*/
 
 function mainGet(response) {
     fileGate = true;
     data.length = null;
     data.array = [];
-    fs.readFile('data.txt', (error, readData, response) => {
-        if(error) {
-            console.log(error);
-            arguments[0].json("0: error reading file");
-            fileGate = false;
+    database.select("*").from("autocrawlerhighscore").then(databaseOuput => {
+        data.length = databaseOutput.length;
+        for(let a = 0; a < data.length; ++a) {
+            data.array.push(new Data(databaseOutput[a].name, databaseOuput[a].number));
         }
-        else {
-            let fileContent = readData.toString().split('\n');
-            processGet(fileContent, arguments[0]); //fileContent into data, sends
-        }
+        response.json({data});
+        fileGate = false;
     });
 }
 
 function processPost(fileContent, request) {
-    data.length = fileContent[0];
-    dataNameTemp = null;
-    //populate data with data from file
-    for(let a = 1; a < (data.length * 2); a+=2) {
-        dataNameTemp = fileContent[a];
-        data.array.push(new Data(dataNameTemp, fileContent[a+1]));
+    data.length = fileContent.length;
+    for(let a = 0; a < data.length; ++a) {
+        data.array.push(new Data(fileContent[a].name, fileContent[a].number));
     }
     //adds new blank Data object to data.array if length is less than 10
     if(data.length < 10) {
@@ -104,13 +97,15 @@ function processPost(fileContent, request) {
 }
 
 function writePost(fileContent, response) {
-    fileContent = data.length.toString();
+    fileContent = [];
     for(let a = 0; a < data.length; ++a) {
-        fileContent += '\n';
-        fileContent += data.array[a].name;
-        fileContent += '\n';
-        fileContent += data.array[a].number;
+        fileContent.push({
+            index: a,
+            name: data.array[a].name,
+            number: data.array[a].number,
+        });
     }
+    database('autocrawlerhighscore').insert(fileContent)
     //element 0 of arguments is fileContent for some reason
     fs.writeFile("data.txt", fileContent, (error, response) => {
         if(error) {
@@ -137,17 +132,13 @@ function mainPost(request, response) {
     fileGate = true;
     data.length = null;
     data.array = [];
-    fs.readFile('data.txt', (error, readData, request, response) => {
-        if(error) {
-            console.log(error);
-            arguments[1].json("0: error reading file");
+    database.select('*').from('autocrawlerhighscores').then((fileContent, request, response) => {
+        database('autocrawlerhighscore').del().then((request, response) => {
+            response.json("1:testing delete");
             fileGate = false;
-        }
-        else {
-            let fileContent = readData.toString().split('\n');
-            processPost(fileContent, arguments[0]); //fileContent into data, uses request
-            writePost(fileContent, arguments[1]); //also sends response
-        }
+        });
+        //processPost(fileContent, arguments[0]); //fileContent into data, uses request
+        //writePost(fileContent, arguments[1]); //also sends response
     });
 }
 
@@ -186,10 +177,7 @@ app.post('/autoCrawlerHighScores', (request, response) => {
 });
 
 app.get('/autoCrawlerHighScores', (request, response) => {
-    //gate("get", request, response);
-    database.select("*").from("autocrawlerhighscore").then(data => {
-        response.json((data));
-    });
+    gate("get", request, response);
 });
 
 app.listen(process.env.PORT);
