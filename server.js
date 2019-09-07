@@ -21,12 +21,6 @@ const database = knex({
 //gates access to file to one user at a time to prevent data loss
 var fileGate = false;
 
-if(!fs.existsSync("data.txt")) {
-    fs.writeFile("data.txt", "0", error => {
-        console.log(error);
-    });
-}
-
 class Data {
     constructor(name, number) {
         this.name = name;
@@ -42,19 +36,6 @@ var data = {
     array: [],
     length: 0,
 };
-
-var dataNameTemp = null;
-
-/*function processGet(fileContent, response) {
-    data.length = fileContent.length;
-    dataNameTemp = null;
-    //populate data with data from file
-    for(let a = 1; a < (data.length * 2); a+=2) {
-        dataNameTemp = fileContent[a];
-        data.array.push(new Data(dataNameTemp, fileContent[a+1]));
-    }
-    response.json({data});
-}*/
 
 function mainGet(response) {
     fileGate = true;
@@ -166,7 +147,16 @@ app.post('/autoCrawlerHighScores', (request, response) => {
 });
 
 app.get('/autoCrawlerHighScores', (request, response) => {
-    gate("get", request, response);
+    //gate("get", request, response);
+    data.length = null;
+    data.array = [];
+    database.select("*").from("autocrawlerhighscore").then(databaseOutput => {
+        data.length = databaseOutput.length;
+        for(let a = 0; a < data.length; ++a) {
+            data.array.push(new Data(databaseOutput[a].name, databaseOutput[a].number));
+        }
+        response.json({data});
+    });
 });
 
 app.listen(process.env.PORT);
