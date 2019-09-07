@@ -88,7 +88,7 @@ function writePost(fileContent, response) {
     }
     database('autocrawlerhighscore').insert(fileContent).then(() => {
         response.json("1: successful post");
-        fileGate = false;
+        //fileGate = false;
     });
 }
 
@@ -101,7 +101,7 @@ function mainPost(request, response) {
         response.json("o: name invalid length");
         return;
     }
-    fileGate = true;
+    //fileGate = true;
     data.length = null;
     data.array = [];
     database.select('*').from('autocrawlerhighscore').then((fileContent) => {
@@ -136,7 +136,8 @@ app.post('/autoCrawlerHighScores', (request, response) => {
         response.json("0: improper request type");
         return;
     }
-    gate("post", request, response);
+    mainPost(request, response);
+    //gate("post", request, response);
     /*database('autocrawlerhighscore').insert({
         index: 12,
         name: request.body.data.name,
