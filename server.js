@@ -5,7 +5,6 @@ const cors = require('cors');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
-const fs = require('fs');
 const Filter = require('bad-words');
 var filter = new Filter();
 const knex = require('knex');
@@ -17,9 +16,6 @@ const database = knex({
         ssl: true,
     },
 });
-
-//gates access to file to one user at a time to prevent data loss
-var fileGate = false;
 
 class Data {
     constructor(name, number) {
@@ -36,20 +32,6 @@ var data = {
     array: [],
     length: 0,
 };
-
-function mainGet(response) {
-    fileGate = true;
-    data.length = null;
-    data.array = [];
-    database.select("*").from("autocrawlerhighscore").then(databaseOutput => {
-        data.length = databaseOutput.length;
-        for(let a = 0; a < data.length; ++a) {
-            data.array.push(new Data(databaseOutput[a].name, databaseOutput[a].number));
-        }
-        response.json({data});
-        fileGate = false;
-    });
-}
 
 function processPost(fileContent, request) {
     data.length = fileContent.length;
@@ -88,7 +70,6 @@ function writePost(fileContent, response) {
     }
     database('autocrawlerhighscore').insert(fileContent).then(() => {
         response.json("1: successful post");
-        //fileGate = false;
     });
 }
 
@@ -101,7 +82,6 @@ function mainPost(request, response) {
         response.json("o: name invalid length");
         return;
     }
-    //fileGate = true;
     data.length = null;
     data.array = [];
     database.select('*').from('autocrawlerhighscore').then((fileContent) => {
@@ -110,18 +90,6 @@ function mainPost(request, response) {
             writePost(fileContent, response); //also sends response
         });
     });
-}
-
-function gate(executionType, request, response) {
-    if(!fileGate) {
-        if(executionType === "post")
-            mainPost(request, response);
-        else if(executionType === "get")
-            mainGet(response);
-    }
-    else if(fileGate) {
-        setTimeout(gate, 10, executionType, request, response);
-    }
 }
 
 app.post('/autoCrawlerHighScores', (request, response) => {
@@ -137,18 +105,9 @@ app.post('/autoCrawlerHighScores', (request, response) => {
         return;
     }
     mainPost(request, response);
-    //gate("post", request, response);
-    /*database('autocrawlerhighscore').insert({
-        index: 12,
-        name: request.body.data.name,
-        number: request.body.data.number,
-    }).then(data => {
-        response.json("1: successful database test");
-    });*/
 });
 
 app.get('/autoCrawlerHighScores', (request, response) => {
-    //gate("get", request, response);
     data.length = null;
     data.array = [];
     database.select("*").from("autocrawlerhighscore").then(databaseOutput => {
@@ -161,5 +120,3 @@ app.get('/autoCrawlerHighScores', (request, response) => {
 });
 
 app.listen(process.env.PORT);
-
-//test comment
