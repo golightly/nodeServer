@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
 const bodyParser = require('body-parser');
 const cors = require('cors');
 app.use(bodyParser.urlencoded({extended: false}));
@@ -15,6 +17,10 @@ const database = knex({
         connectionString: process.env.DATABASE_URL,
         ssl: true,
     },
+});
+
+io.on('connection', () => {
+    console.log("A USER CONNECTED!")
 });
 
 class Data {
@@ -119,4 +125,4 @@ app.get('/autoCrawlerHighScores', (request, response) => {
     });
 });
 
-app.listen(process.env.PORT);
+http.listen(process.env.PORT);
