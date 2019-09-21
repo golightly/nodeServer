@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(http, {path: '/socketTest'});
 const bodyParser = require('body-parser');
 const cors = require('cors');
 app.use(bodyParser.urlencoded({extended: false}));
