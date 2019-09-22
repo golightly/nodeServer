@@ -22,13 +22,15 @@ const database = knex({
 
 io.on('connection', () => {
     console.log("A USER CONNECTED!");
-    io.on('disconnect', () => {
-        console.log("A USER DISCONNECTED!");
-    });
-    io.on('disconnectMessage', (message) => {
-        console.log("message1: " + message.msg1);
-        console.log("message2: " + message.msg2);
-    });
+});
+
+io.on('disconnect', () => {
+    console.log("A USER DISCONNECTED!");
+});
+
+io.on('disconnectMessage', (message) => {
+    console.log("message1: " + message.msg1);
+    console.log("message2: " + message.msg2);
 });
 
 class Data {
