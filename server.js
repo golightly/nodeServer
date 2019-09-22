@@ -1,4 +1,3 @@
-//comment
 const express = require('express');
 const app = express();
 var http = require('http').createServer(app);
@@ -27,6 +26,7 @@ io.on('connection', () => {
 io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log("A USER DISCONNECTED!");
+        socket.disconnect();
     });
 });
 
