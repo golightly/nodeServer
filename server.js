@@ -26,6 +26,7 @@ io.on('connection', () => {
 io.on('connection', (socket) => {
     console.log("test message");
     socket.on('disconnectMessage', (message) => {
+        socket.emit("SHOULD BE RECEIVED BY CURRENT USER ONLY!");
         console.log("message1: " + message.msg1);
         console.log("message2: " + message.msg2);
         io.emit('serverResponse', {msg: "test message from server"});
