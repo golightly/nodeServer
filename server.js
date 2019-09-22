@@ -29,8 +29,11 @@ io.on('connection', (socket) => {
         console.log("message1: " + message.msg1);
         console.log("message2: " + message.msg2);
     });
-    socket.on('disconnect', () {
-        console.log("CLIENT DISCONNECTED!");
+});
+
+io.on('connection', (socket) => {
+    socket.on('disconnect', () => {
+        console.log('CLIENT DISCONNECTED!');
     });
 });
 
