@@ -24,7 +24,7 @@ io.on('connection', () => {
 });
 
 io.on('connection', (socket) => {
-    socket.emit("test message from server");
+    socket.emit('serverResponse', {msg: "test message from server"});
     socket.on('disconnectMessage', (message) => {
         console.log("message1: " + message.msg1);
         console.log("message2: " + message.msg2);
