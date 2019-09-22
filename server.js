@@ -24,16 +24,11 @@ io.on('connection', () => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('disconnect', () => {
+    socket.on('disconnectMessage', () => {
         console.log("A USER DISCONNECTED!");
-        socket.disconnect();
-    });
-});
-
-io.on('connection', (socket) => {
-    socket.on('disconnectMessage', (message) => {
         console.log("message1: " + message.msg1);
         console.log("message2: " + message.msg2);
+        socket.disconnect();
     });
 });
 
