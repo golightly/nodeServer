@@ -30,6 +30,9 @@ io.on('connection', (socket) => {
         console.log("message2: " + message.msg2);
         //socket.disconnect();
     });
+    socket.on('disconnect', () {
+        console.log("CLIENT DISCONNECTED!");
+    });
 });
 
 class Data {
