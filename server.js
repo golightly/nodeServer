@@ -19,9 +19,15 @@ const database = knex({
     },
 });
 
+//broadcast to all except sender
+//assign to room
+//broadcast to room
+//get id of individual socket
+
 io.on('connection', (socket) => {
     console.log("A USER CONNECTED!");
     socket.emit('serverResponse', {msg:"SHOULD BE RECEIVED BY CURRENT USER ONLY!"});
+    socket.broadcast.emit('broadcast', 'broadcasting message');
 });
 
 io.on('connection', (socket) => {
