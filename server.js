@@ -20,8 +20,8 @@ const database = knex({
 });
 
 //broadcast to all except sender WORKING
-//assign to room
-//broadcast to room
+//assign to room WORKING
+//broadcast to room WORKING
 //get id of individual socket
 
 io.on('connection', (socket) => {
@@ -49,6 +49,7 @@ io.on('connection', (socket) => {
 io.on('connection', (socket) => {
     socket.on('testMessage', (message) => {
         console.log("test message: " + message.msg);
+        console.log("socket id: " + socket.id);
         socket.to('room1').emit('roomMessage', {msg:'room test message'});
     });
 });
