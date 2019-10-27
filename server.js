@@ -19,7 +19,7 @@ const database = knex({
     },
 });
 
-io.on('connection', () => {
+io.on('connection', (socket) => {
     console.log("A USER CONNECTED!");
     socket.emit('serverResponse', {msg:"SHOULD BE RECEIVED BY CURRENT USER ONLY!"});
 });
