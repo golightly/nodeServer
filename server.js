@@ -47,6 +47,13 @@ io.on('connection', (socket) => {
 });
 
 io.on('connection', (socket) => {
+    socket.on('testMessage', (message) => {
+        console.log("test message: " + message.msg);
+        socket.to('room1').emit('roomMessage', "room test message");
+    });
+});
+
+io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('CLIENT DISCONNECTED!');
     });
