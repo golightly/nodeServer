@@ -19,7 +19,7 @@ const database = knex({
     },
 });
 
-//broadcast to all except sender
+//broadcast to all except sender WORKING
 //assign to room
 //broadcast to room
 //get id of individual socket
@@ -36,6 +36,12 @@ io.on('connection', (socket) => {
         console.log("message1: " + message.msg1);
         console.log("message2: " + message.msg2);
         //io.emit('serverResponse', {msg: "test message from server"});
+    });
+});
+
+io.on('connection', (socket) => {
+    socket.on('join', (message) => {
+        socket.join(message.room);
     });
 });
 
